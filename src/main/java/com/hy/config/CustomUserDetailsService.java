@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private SysUserRoleService userRoleService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -49,6 +53,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // 返回UserDetails实现类
-        return new User(sysUser.getName(), sysUser.getPassword(), authorities);
+        return new User(sysUser.getName(), passwordEncoder.encode(sysUser.getPassword()), authorities);
     }
 }
